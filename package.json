@@ -1,0 +1,18 @@
+{
+  "name": "monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run dev --prefix Apps/web",
+    "build": "npm run build --prefix Apps/web",
+    "start": "npm run start --prefix Apps/web",
+    "lint": "npm run lint --prefix Apps/web",
+    "pb": "powershell -Command \"taskkill /F /IM pocketbase.exe 2>&1 | Out-Null; .\\Apps\\pocketbase\\pocketbase.exe serve --http=127.0.0.1:8091\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "workspaces": [
+    "Apps/*"
+  ]
+}

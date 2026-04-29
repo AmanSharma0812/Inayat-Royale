@@ -1,0 +1,31 @@
+Pocketbase Setup Instructions
+============================
+
+1. Download Pocketbase manually from:
+   https://github.com/pocketbase/pocketbase/releases/download/v0.25.0/pocketbase_0.25.0_windows_amd64.zip
+
+2. Extract the zip file
+
+3. Run pocketbase.exe
+
+4. Pocketbase will be available at http://127.0.0.1:8090
+
+5. Access the admin dashboard at http://127.0.0.1:8090/_/
+
+6. Create these collections:
+   - admins (for authentication)
+   - products
+   - categories
+   - contacts
+
+7. For the admins collection, make sure to:
+   - Enable email/password authentication
+   - Add at least one admin user
+
+8. Set up relationships:
+   - products.category should be a relation to categories collection
+
+9. The web app is configured to connect to http://127.0.0.1:8090 by default
+
+10. To customize the URL, create a .env file in Apps/web with:
+    VITE_POCKETBASE_URL=http://your-pocketbase-url:8090
