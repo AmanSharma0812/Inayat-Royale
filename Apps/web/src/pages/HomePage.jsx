@@ -47,14 +47,14 @@ const HomePage = () => {
   return (
     <>
       <Helmet>
-        <title>Inayat Royale - Timeless Elegance, Royal Heritage</title>
+        <title>Inayat Royale - Where Every Sparkle Tells a Royal Story</title>
         <meta name="description" content="Discover exquisite handcrafted premium jewellery by Inayat Royale. BIS hallmarked, 99.9% pure gold, certified quality. Shop bridal, gold & silver jewellery." />
         <link rel="canonical" href={SITE_URL} />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={SITE_URL} />
-        <meta property="og:title" content="Inayat Royale - Timeless Elegance, Royal Heritage" />
+        <meta property="og:title" content="Inayat Royale - Where Every Sparkle Tells a Royal Story" />
         <meta property="og:description" content="Discover exquisite handcrafted premium jewellery. BIS hallmarked, 99.9% pure gold. Bridal, gold & silver collections with certified quality." />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:image:width" content="1200" />
@@ -62,7 +62,7 @@ const HomePage = () => {
         <meta property="og:image:alt" content="Inayat Royale luxury jewellery collection" />
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Inayat Royale - Timeless Elegance, Royal Heritage" />
+        <meta name="twitter:title" content="Inayat Royale - Where Every Sparkle Tells a Royal Story" />
         <meta name="twitter:description" content="Discover exquisite handcrafted premium jewellery. BIS hallmarked, 99.9% pure gold." />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         {/* JSON-LD: JewelryStore */}
@@ -91,8 +91,8 @@ const HomePage = () => {
           <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0">
               <img
-                src="https://images.unsplash.com/photo-1656042744506-1d3c6e2b013e"
-                alt="Luxury jewellery collection"
+                src="/hero_banner.jpg"
+                alt="Inayat Royale Bridal Jewellery Collection"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40"></div>
@@ -111,7 +111,7 @@ const HomePage = () => {
                   className="h-36 md:h-48 w-auto object-contain mb-8 drop-shadow-2xl"
                 />
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight font-serif">
-                  Timeless Elegance,<br /><span className="text-primary">Royal Heritage</span>
+                  Where Every Sparkle<br /><span className="text-primary">Tells a Royal Story</span>
                 </h1>
                 <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto font-light">
                   Discover exquisite handcrafted jewellery that celebrates life's most precious and royal moments

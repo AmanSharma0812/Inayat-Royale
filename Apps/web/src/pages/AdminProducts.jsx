@@ -84,29 +84,26 @@ const AdminProducts = () => {
 
   const onSubmit = async (data) => {
     try {
-      let body;
+      const formData = new FormData();
+      formData.append('name', data.name);
+      if (data.description) formData.append('description', data.description);
+      if (data.category) formData.append('category', data.category);
+      
+      // Ensure price is a valid number before appending
+      const priceVal = parseFloat(data.price);
+      if (!isNaN(priceVal)) {
+        formData.append('price', priceVal);
+      }
 
       if (imageFile) {
-        // Use FormData only when uploading a file
-        body = new FormData();
-        body.append('name', data.name);
-        if (data.description) body.append('description', data.description);
-        if (data.category) body.append('category', data.category);
-        if (data.price) body.append('price', parseFloat(data.price));
-        body.append('image', imageFile);
-      } else {
-        // Use plain JSON for non-file requests (simpler, no encoding issues)
-        body = { name: data.name };
-        if (data.description) body.description = data.description;
-        if (data.category) body.category = data.category;
-        if (data.price) body.price = parseFloat(data.price);
+        formData.append('image', imageFile);
       }
 
       if (editingProduct) {
-        await pb.collection('products').update(editingProduct.id, body, { requestKey: null });
+        await pb.collection('products').update(editingProduct.id, formData, { requestKey: null });
         toast.success('Product updated successfully');
       } else {
-        await pb.collection('products').create(body, { requestKey: null });
+        await pb.collection('products').create(formData, { requestKey: null });
         toast.success('Product created successfully');
       }
 
@@ -114,16 +111,9 @@ const AdminProducts = () => {
       resetForm();
       fetchProducts();
     } catch (error) {
-      const fieldErrors = error?.response?.data;
-      if (fieldErrors && Object.keys(fieldErrors).length > 0) {
-        const fieldMsgs = Object.entries(fieldErrors)
-          .map(([field, err]) => `${field}: ${err?.message || err}`)
-          .join(', ');
-        toast.error(`${editingProduct ? 'Failed to update' : 'Failed to create'} product — ${fieldMsgs}`);
-      } else {
-        const msg = error?.response?.message || error?.message || 'Unknown error';
-        toast.error(`${editingProduct ? 'Failed to update' : 'Failed to create'} product: ${msg}`);
-      }
+      console.error('Submit Error:', error);
+      const msg = error?.response?.message || error?.message || 'Unknown error';
+      toast.error(`Failed to save product: ${msg}`);
     }
   };
 
@@ -134,7 +124,6 @@ const AdminProducts = () => {
       description: product.description || '',
       category: product.category,
       price: product.price?.toString() || '',
-      image: undefined
     });
     if (product.image) {
       setImagePreview(pb.files.getUrl(product, product.image));
@@ -143,16 +132,13 @@ const AdminProducts = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
-      try {
+    try {
         await pb.collection('products').delete(id, { requestKey: null });
         toast.success('Product deleted successfully');
         fetchProducts();
       } catch (error) {
-        const msg = error?.response?.message || error?.message || 'Unknown error';
-        toast.error(`Failed to delete product: ${msg}`);
+        toast.error('Failed to delete product');
       }
-    }
   };
 
   const resetForm = () => {
@@ -281,20 +267,16 @@ const AdminProducts = () => {
                       <FormField
                         control={form.control}
                         name="image"
-                        render={({ field: { value, onChange, ...fieldProps } }) => (
+                        render={() => (
                           <FormItem>
                             <FormLabel>Product Image</FormLabel>
                             <FormControl>
                               <div className="mt-2">
                                 <Input
-                                  {...fieldProps}
                                   type="file"
                                   accept="image/*"
                                   className="text-foreground"
-                                  onChange={(e) => {
-                                    handleImageChange(e);
-                                    onChange(e.target.files);
-                                  }}
+                                  onChange={handleImageChange}
                                 />
                                 {imagePreview && (
                                   <div className="mt-4 relative inline-block">
@@ -308,7 +290,6 @@ const AdminProducts = () => {
                                       onClick={() => {
                                         setImageFile(null);
                                         setImagePreview(null);
-                                        form.setValue('image', undefined);
                                       }}
                                       className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:bg-destructive/90 transition-colors"
                                     >
@@ -352,27 +333,31 @@ const AdminProducts = () => {
             ) : products.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => (
-                  <div key={product.id} className="bg-card rounded-2xl overflow-hidden shadow-sm">
-                    <div className="aspect-square relative">
-                      <img
-                        src={product.image
-                          ? pb.files.getUrl(product, product.image, { thumb: '300x300' })
-                          : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=300&fit=crop'}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
+                  <div key={product.id} className="bg-card rounded-2xl overflow-hidden shadow-sm flex flex-col">
+                    <div className="aspect-square relative bg-muted">
+                      {product.image ? (
+                        <img
+                          src={pb.files.getUrl(product, product.image, { thumb: '300x300' })}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                          <Package className="w-16 h-16 opacity-20" />
+                        </div>
+                      )}
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex-1 flex flex-col">
                       <h3 className="text-xl font-semibold mb-2 font-serif">{product.name}</h3>
                       <p className="text-sm text-muted-foreground mb-2">
-                        {product.expand?.category?.name}
+                        {product.expand?.category?.name || 'No Category'}
                       </p>
                       {product.price && (
                         <p className="text-lg font-bold text-primary mb-4">
-                          ₹{product.price.toLocaleString('en-IN')}
+                          ₹{Number(product.price).toLocaleString('en-IN')}
                         </p>
                       )}
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 mt-auto">
                         <Button
                           variant="outline"
                           size="sm"
@@ -418,4 +403,4 @@ const AdminProducts = () => {
   );
 };
 
-export default AdminProducts;
+export default AdminProducts;

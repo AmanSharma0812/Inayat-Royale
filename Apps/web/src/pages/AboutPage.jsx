@@ -63,7 +63,7 @@ const AboutPage = () => {
               >
                 <h1 className="text-5xl md:text-6xl font-bold mb-6 font-serif">The Inayat Royale Heritage</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  A legacy of royal craftsmanship, trust, and timeless elegance
+                  Where Every Sparkle Tells a Royal Story
                 </p>
               </motion.div>
             </div>

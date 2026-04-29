@@ -9,7 +9,7 @@ import { SHOP_WHATSAPP_NUMBER } from '@/config/whatsappConfig.js';
 const ProductCard = ({ product, category }) => {
   const imageUrl = product.image 
     ? pb.files.getUrl(product, product.image, { thumb: '300x300' })
-    : 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=300&fit=crop';
+    : 'https://images.unsplash.com/photo-1576053139778-7e32f2ae3cf4?w=300&h=300&fit=crop'; // Generic elegant jewelry background
 
   const handleWhatsAppInquiry = () => {
     const categoryName = category?.name || 'Uncategorized';

@@ -1,16 +1,6 @@
-// @refresh reset
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import pb from '@/lib/pocketbaseClient';
-
-const AuthContext = createContext(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
-};
+import { AuthContext } from './AuthContext';
 
 export const AuthProvider = ({ children }) => {
   const [currentAdmin, setCurrentAdmin] = useState(null);

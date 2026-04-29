@@ -19,7 +19,7 @@ const Footer = () => {
               <span className="text-xl font-bold font-serif">Inayat Royale</span>
             </div>
             <p className="text-sm text-secondary-foreground/80 leading-relaxed max-w-none">
-              Crafting timeless elegance with the finest premium jewellery. Your trusted partner for life's most precious and royal moments.
+              Where Every Sparkle Tells a Royal Story. Discover exquisite handcrafted jewellery with Inayat Royale.
             </p>
           </div>
 

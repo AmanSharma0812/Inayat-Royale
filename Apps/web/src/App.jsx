@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/contexts/AuthProvider';
 import { Toaster } from '@/components/ui/sonner';
 import ScrollToTop from '@/components/ScrollToTop';
 import ProtectedAdminRoute from '@/components/ProtectedAdminRoute.jsx';
