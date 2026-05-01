@@ -15,6 +15,10 @@ import AdminProducts from '@/pages/AdminProducts';
 import AdminCategories from '@/pages/AdminCategories';
 import AdminContacts from '@/pages/AdminContacts';
 import AdminChangePassword from '@/pages/AdminChangePassword';
+import ShippingPolicy from '@/pages/ShippingPolicy';
+import ReturnPolicy from '@/pages/ReturnPolicy';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+
 
 function App() {
   return (
@@ -27,6 +31,10 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/return-policy" element={<ReturnPolicy />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
           <Route path="/admin-login" element={<AdminLoginPage />} />
           <Route 
             path="/admin" 

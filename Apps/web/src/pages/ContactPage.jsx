@@ -73,8 +73,8 @@ const ContactPage = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2">Phone</h3>
-                      <p className="text-muted-foreground leading-relaxed">+91 98765 43210</p>
-                      <p className="text-muted-foreground leading-relaxed">+91 98765 43211</p>
+                      <p className="text-muted-foreground leading-relaxed">+91 98145 89421</p>
+
                     </div>
                   </div>
 
@@ -84,8 +84,8 @@ const ContactPage = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-2">Email</h3>
-                      <p className="text-muted-foreground leading-relaxed">info@inayatroyale.com</p>
-                      <p className="text-muted-foreground leading-relaxed">sales@inayatroyale.com</p>
+                      <p className="text-muted-foreground leading-relaxed">royaleinayat@gmail.com</p>
+
                     </div>
                   </div>
 

@@ -164,13 +164,14 @@ const HomePage = () => {
                   transition={{ duration: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">The Inayat Royale Story</h2>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">Inayat Royale</h2>
                   <p className="text-lg text-muted-foreground mb-6 leading-relaxed max-w-none">
-                    Inayat Royale has been crafting exceptional pieces that tell stories of love, celebration, and royal heritage. Our master craftsmen combine traditional techniques with contemporary designs to create jewellery that transcends generations.
+                    Inayat Royale is where luxury meets grace. Our jewellery is inspired by royal aesthetics and designed for the modern woman who loves to stand out with subtle sophistication.
                   </p>
                   <p className="text-lg text-muted-foreground mb-8 leading-relaxed max-w-none">
-                    Every piece is meticulously crafted with certified materials, ensuring you receive nothing but the finest quality. Our commitment to excellence has made us a trusted name in premium luxury jewellery.
+                    Every design carries a touch of glamour, ensuring you feel confident, beautiful, and truly special every time you wear it.
                   </p>
+
                   <Link to="/about">
                     <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                       Discover Our Heritage

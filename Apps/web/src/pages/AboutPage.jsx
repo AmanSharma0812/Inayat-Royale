@@ -93,16 +93,14 @@ const AboutPage = () => {
                   transition={{ duration: 0.6 }}
                   viewport={{ once: true }}
                 >
-                  <h2 className="text-4xl font-bold mb-6 font-serif text-primary">Heritage and Excellence</h2>
+                  <h2 className="text-4xl font-bold mb-6 font-serif text-primary">Subtle Sophistication</h2>
                   <p className="text-lg text-muted-foreground mb-6 leading-relaxed max-w-none">
-                    Inayat Royale began with a vision to create exceptional premium jewellery that would be treasured for generations. What started with a single master craftsman has grown into a renowned luxury establishment, yet we've never lost sight of our core values.
+                    Inayat Royale is where luxury meets grace. Our jewellery is inspired by royal aesthetics and designed for the modern woman who loves to stand out with subtle sophistication.
                   </p>
                   <p className="text-lg text-muted-foreground mb-6 leading-relaxed max-w-none">
-                    Our journey has been marked by an unwavering commitment to quality, authenticity, and royal elegance. Every piece that leaves our workshop carries with it decades of expertise and a promise of excellence.
+                    Every design carries a touch of glamour, ensuring you feel confident, beautiful, and truly special every time you wear it.
                   </p>
-                  <p className="text-lg text-muted-foreground leading-relaxed max-w-none">
-                    Today, we're proud to serve discerning customers who trust Inayat Royale with their most precious moments - from engagements and weddings to milestone celebrations and heirloom pieces.
-                  </p>
+
                 </motion.div>
               </div>
 

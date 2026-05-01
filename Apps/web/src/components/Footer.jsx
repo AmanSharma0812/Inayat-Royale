@@ -54,16 +54,17 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 mt-0.5 text-primary flex-shrink-0" />
-                <span className="text-sm text-secondary-foreground/80">123 Royal Avenue, Zaveri Bazaar, Mumbai, India</span>
+                <span className="text-sm text-secondary-foreground/80">Mumbai, Maharashtra, India</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <span className="text-sm text-secondary-foreground/80">+91 98765 43210</span>
+                <span className="text-sm text-secondary-foreground/80">+91 98145 89421</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <span className="text-sm text-secondary-foreground/80">info@inayatroyale.com</span>
+                <span className="text-sm text-secondary-foreground/80">royaleinayat@gmail.com</span>
               </li>
+
             </ul>
           </div>
 
@@ -73,15 +74,17 @@ const Footer = () => {
               <a href="#" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
+              <a href="https://instagram.com/inayat_royale" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
                 <Instagram className="w-5 h-5" />
               </a>
+
               <a href="#" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
             <a
-              href="https://wa.me/919876543210"
+              href="https://wa.me/919814589421"
+
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-all duration-200 shadow-lg shadow-[#25D366]/20"
@@ -97,14 +100,18 @@ const Footer = () => {
             <p className="text-sm text-secondary-foreground/60">
               © {currentYear} Inayat Royale. All rights reserved.
             </p>
-            <div className="flex space-x-6">
-              <Link to="#" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">
+              <Link to="/shipping-policy" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
+                Shipping Policy
+              </Link>
+              <Link to="/return-policy" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
+                Return Policy
+              </Link>
+              <Link to="/privacy-policy" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
                 Privacy Policy
               </Link>
-              <Link to="#" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
-                Terms of Service
-              </Link>
             </div>
+
           </div>
         </div>
       </div>
