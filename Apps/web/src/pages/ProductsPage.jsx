@@ -5,6 +5,8 @@ import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
+import BackButton from '@/components/BackButton';
+
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -63,13 +65,15 @@ const ProductsPage = () => {
         <Header />
 
         <main className="flex-1 py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
             <div className="text-center mb-16">
               <h1 className="text-5xl md:text-6xl font-bold mb-6 font-serif">Our Royal Collection</h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Discover exquisite pieces crafted with precision and passion by Inayat Royale
               </p>
             </div>
+
 
             <div className="flex flex-wrap gap-3 justify-center mb-16">
               <Button

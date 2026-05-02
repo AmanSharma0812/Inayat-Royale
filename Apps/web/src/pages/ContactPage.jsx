@@ -5,6 +5,8 @@ import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ContactForm from '@/components/ContactForm';
+import BackButton from '@/components/BackButton';
+
 
 const ContactPage = () => {
   return (
@@ -40,8 +42,10 @@ const ContactPage = () => {
         <Header />
 
         <main className="flex-1 py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
             <div className="text-center mb-16">
+
               <h1 className="text-5xl md:text-6xl font-bold mb-6 font-serif">Get in Touch</h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 We'd love to hear from you. Visit the Inayat Royale showroom or send us a message.

@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet-async';
 import { SITE_URL, SITE_NAME } from '@/config/seo';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
+
 
 const ShippingPolicy = () => {
   return (
@@ -16,7 +18,9 @@ const ShippingPolicy = () => {
         <Header />
         <main className="flex-1 py-24 bg-background">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <BackButton className="mb-8" />
             <h1 className="text-4xl font-bold mb-12 font-serif text-primary border-b pb-4">Shipping Policy</h1>
+
             
             <div className="prose prose-invert max-w-none space-y-8">
               <section>

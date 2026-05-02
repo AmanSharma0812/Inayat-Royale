@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
+import BackButton from '@/components/BackButton';
 
 const formSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -53,6 +54,9 @@ const AdminLoginPage = () => {
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background px-4 relative overflow-hidden">
+        <div className="absolute top-8 left-8 z-20">
+          <BackButton />
+        </div>
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1656042744506-1d3c6e2b013e')] bg-cover bg-center opacity-10"></div>
         
         <div className="w-full max-w-md relative z-10">
