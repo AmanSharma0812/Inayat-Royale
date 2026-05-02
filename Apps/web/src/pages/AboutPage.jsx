@@ -36,17 +36,20 @@ const AboutPage = () => {
     <>
       <Helmet>
         <title>About Inayat Royale - Our Heritage & Craftsmanship</title>
-        <meta name="description" content="Discover the story behind Inayat Royale — generations of jewellery craftsmanship, BIS certified quality, and a commitment to excellence in every handcrafted piece." />
+        <meta name="description" content="Discover the story behind Inayat Royale — premium fashion jewellery craftsmanship, contemporary designs, and a commitment to elegance in every handcrafted piece." />
+
         <link rel="canonical" href={`${SITE_URL}/about`} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={`${SITE_URL}/about`} />
         <meta property="og:title" content="About Inayat Royale - Our Heritage & Craftsmanship" />
-        <meta property="og:description" content="Generations of jewellery craftsmanship, BIS certified quality, and a commitment to excellence in every handcrafted piece." />
+        <meta property="og:description" content="Premium fashion jewellery craftsmanship, contemporary designs, and a commitment to elegance in every handcrafted piece." />
+
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="About Inayat Royale" />
-        <meta name="twitter:description" content="Generations of jewellery craftsmanship and certified quality." />
+        <meta name="twitter:description" content="Premium fashion jewellery craftsmanship and contemporary elegance." />
+
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Helmet>
 
@@ -125,7 +128,8 @@ const AboutPage = () => {
                       <div>
                         <h3 className="text-xl font-semibold mb-2">Certified Quality</h3>
                         <p className="text-muted-foreground leading-relaxed max-w-none">
-                          All our jewellery is BIS hallmarked and comes with authenticity certificates. We use only 99.9% pure gold and certified gemstones.
+                          Our jewellery is crafted with high-grade alloys and premium finishes. We ensure every piece meets our standards for durability and aesthetic beauty.
+
                         </p>
                       </div>
                     </div>

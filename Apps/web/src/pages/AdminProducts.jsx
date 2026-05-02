@@ -191,7 +191,8 @@ const AdminProducts = () => {
                             <FormLabel>Product Name</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="Gold Necklace"
+                                placeholder="Bridal Necklace"
+
                                 {...field}
                                 className="text-foreground placeholder:text-muted-foreground"
                               />

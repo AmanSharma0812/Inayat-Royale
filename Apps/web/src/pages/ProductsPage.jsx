@@ -46,18 +46,22 @@ const ProductsPage = () => {
   return (
     <>
       <Helmet>
-        <title>Jewellery Collection - Inayat Royale | Gold, Silver & Bridal</title>
-        <meta name="description" content="Browse Inayat Royale's exquisite collection of premium gold, silver, and bridal jewellery. BIS certified quality with transparent pricing. Shop now." />
+        <title>Jewellery Collection - Inayat Royale | Fashion, Bridal & Lifestyle</title>
+
+        <meta name="description" content="Browse Inayat Royale's exquisite collection of premium fashion, bridal, and lifestyle jewellery. Quality assured designs with transparent pricing. Shop now." />
+
         <link rel="canonical" href={`${SITE_URL}/products`} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={`${SITE_URL}/products`} />
         <meta property="og:title" content="Jewellery Collection - Inayat Royale" />
-        <meta property="og:description" content="Browse our exquisite collection of premium gold, silver, and bridal jewellery. BIS certified quality with transparent pricing." />
+        <meta property="og:description" content="Browse our exquisite collection of premium fashion, bridal, and lifestyle jewellery. Quality assured designs with transparent pricing." />
+
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Jewellery Collection - Inayat Royale" />
-        <meta name="twitter:description" content="Browse premium gold, silver and bridal jewellery. BIS certified." />
+        <meta name="twitter:description" content="Browse premium fashion, bridal and lifestyle jewellery. Quality assured designs." />
+
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Helmet>
 

@@ -34,8 +34,9 @@ const HomePage = () => {
     },
     {
       icon: Award,
-      title: '99.9% Pure Gold',
-      description: 'Guaranteed purity with transparent pricing'
+      title: 'Premium Quality',
+      description: 'Handcrafted with precision using high-grade materials'
+
     },
     {
       icon: Clock,
@@ -48,14 +49,16 @@ const HomePage = () => {
     <>
       <Helmet>
         <title>Inayat Royale - Where Every Sparkle Tells a Royal Story</title>
-        <meta name="description" content="Discover exquisite handcrafted premium jewellery by Inayat Royale. BIS hallmarked, 99.9% pure gold, certified quality. Shop bridal, gold & silver jewellery." />
+        <meta name="description" content="Discover exquisite handcrafted premium fashion jewellery by Inayat Royale. Quality assured, contemporary designs, and royal aesthetics. Shop bridal and lifestyle jewellery." />
+
         <link rel="canonical" href={SITE_URL} />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:url" content={SITE_URL} />
         <meta property="og:title" content="Inayat Royale - Where Every Sparkle Tells a Royal Story" />
-        <meta property="og:description" content="Discover exquisite handcrafted premium jewellery. BIS hallmarked, 99.9% pure gold. Bridal, gold & silver collections with certified quality." />
+        <meta property="og:description" content="Discover exquisite handcrafted premium fashion jewellery. Contemporary designs with royal aesthetics. Bridal and lifestyle collections." />
+
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -63,7 +66,8 @@ const HomePage = () => {
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Inayat Royale - Where Every Sparkle Tells a Royal Story" />
-        <meta name="twitter:description" content="Discover exquisite handcrafted premium jewellery. BIS hallmarked, 99.9% pure gold." />
+        <meta name="twitter:description" content="Discover exquisite handcrafted premium fashion jewellery with contemporary designs." />
+
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         {/* JSON-LD: JewelryStore */}
         <script type="application/ld+json">{JSON.stringify({
@@ -72,7 +76,8 @@ const HomePage = () => {
           "name": SITE_NAME,
           "url": SITE_URL,
           "logo": LOGO_URL,
-          "description": "Premium handcrafted jewellery with BIS hallmark certification and royal heritage.",
+          "description": "Premium handcrafted fashion jewellery with contemporary designs and royal heritage.",
+
           "telephone": `+${WHATSAPP_NUMBER}`,
           "priceRange": "₹₹₹",
           "sameAs": [`https://wa.me/${WHATSAPP_NUMBER}`],

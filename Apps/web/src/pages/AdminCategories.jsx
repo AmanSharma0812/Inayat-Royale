@@ -144,7 +144,7 @@ const AdminCategories = () => {
                             <FormLabel>Category Name</FormLabel>
                             <FormControl>
                               <Input 
-                                placeholder="Gold Jewellery" 
+                                placeholder="Bridal Jewellery" 
                                 {...field}
                                 className="text-foreground placeholder:text-muted-foreground"
                               />
