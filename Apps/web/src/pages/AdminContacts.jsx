@@ -4,6 +4,7 @@ import { Trash2, MessageSquare } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from 'sonner';
@@ -52,7 +53,8 @@ const AdminContacts = () => {
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
 
-        <main className="flex-1 py-20 container mx-auto px-4">
+        <main className="flex-1 py-20 container mx-auto px-4 pt-8">
+          <BackButton className="mb-8" />
           <div className="mb-8">
             <h1 className="text-4xl font-bold font-serif mb-2">Customer Enquiries</h1>
             <p className="text-muted-foreground">Manage your contact form submissions</p>

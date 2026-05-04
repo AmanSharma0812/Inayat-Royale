@@ -7,6 +7,7 @@ import { Pencil, Trash2, Plus, X, Package } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,23 +15,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import ConfirmDialog from '@/components/ConfirmDialog';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   description: z.string().optional(),
   category: z.string().min(1, 'Please select a category'),
   price: z.string().optional(),
-  image: z.any().optional()
+  image: z.any().optional(),
+  video: z.any().optional(),
+  status: z.string().optional()
 });
 
 const AdminProducts = () => {
+  const { formatPrice } = useCurrency();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -39,7 +49,9 @@ const AdminProducts = () => {
       description: '',
       category: '',
       price: '',
-      image: undefined
+      image: undefined,
+      video: undefined,
+      status: 'normal'
     }
   });
 
@@ -71,33 +83,88 @@ const AdminProducts = () => {
   }, []);
 
   const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      if (files.length + imageFiles.length > 5) {
+        toast.error('You can only upload up to 5 images');
+        return;
+      }
+
+      const newFiles = [...imageFiles, ...files];
+      setImageFiles(newFiles);
+
+      const newPreviews = [];
+      let loaded = 0;
+      
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          newPreviews.push(reader.result);
+          loaded++;
+          if (loaded === files.length) {
+            setImagePreviews([...imagePreviews, ...newPreviews]);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 20 * 1024 * 1024) {
+        toast.error('Video must be less than 20MB');
+        return;
+      }
+      setVideoFile(file);
+      setVideoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeVideo = () => {
+    setVideoFile(null);
+    setVideoPreview(null);
+  };
+
+  const removeImage = (index) => {
+    const newFiles = [...imageFiles];
+    newFiles.splice(index, 1);
+    setImageFiles(newFiles);
+
+    const newPreviews = [...imagePreviews];
+    newPreviews.splice(index, 1);
+    setImagePreviews(newPreviews);
+  };
+
   const onSubmit = async (data) => {
+    if (!editingProduct && imageFiles.length < 2) {
+      toast.error('At least 2 images are required');
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append('name', data.name);
       if (data.description) formData.append('description', data.description);
       if (data.category) formData.append('category', data.category);
       
-      // Ensure price is a valid number before appending
       const priceVal = parseFloat(data.price);
       if (!isNaN(priceVal)) {
         formData.append('price', priceVal);
       }
 
-      if (imageFile) {
-        formData.append('image', imageFile);
+      // Append all new image files
+      imageFiles.forEach(file => {
+        formData.append('image', file);
+      });
+
+      // Append new video file if any
+      if (videoFile) {
+        formData.append('video', videoFile);
       }
+      
+      if (data.status) formData.append('status', data.status);
 
       if (editingProduct) {
         await pb.collection('products').update(editingProduct.id, formData, { requestKey: null });
@@ -112,8 +179,17 @@ const AdminProducts = () => {
       fetchProducts();
     } catch (error) {
       console.error('Submit Error:', error);
-      const msg = error?.response?.message || error?.message || 'Unknown error';
-      toast.error(`Failed to save product: ${msg}`);
+      const data = error?.response?.data;
+      if (data && Object.keys(data).length > 0) {
+        // Map PocketBase field errors to the form
+        Object.entries(data).forEach(([field, err]) => {
+          toast.error(`${field}: ${err.message || 'Validation failed'}`);
+          form.setError(field, { message: err.message });
+        });
+      } else {
+        const msg = error?.response?.message || error?.message || 'Unknown error';
+        toast.error(`Failed to save product: ${msg}`);
+      }
     }
   };
 
@@ -124,28 +200,46 @@ const AdminProducts = () => {
       description: product.description || '',
       category: product.category,
       price: product.price?.toString() || '',
+      status: product.status || 'normal',
     });
-    if (product.image) {
-      setImagePreview(pb.files.getUrl(product, product.image));
+    
+    if (product.image && Array.isArray(product.image)) {
+      const urls = product.image.map(img => pb.files.getUrl(product, img));
+      setImagePreviews(urls);
+    } else if (product.image && typeof product.image === 'string') {
+      setImagePreviews([pb.files.getUrl(product, product.image)]);
     }
+
+    if (product.video) {
+      setVideoPreview(pb.files.getUrl(product, product.video));
+    } else {
+      setVideoPreview(null);
+    }
+    
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
+    if (!deleteId) return;
     try {
-        await pb.collection('products').delete(id, { requestKey: null });
-        toast.success('Product deleted successfully');
-        fetchProducts();
-      } catch (error) {
-        toast.error('Failed to delete product');
-      }
+      await pb.collection('products').delete(deleteId, { requestKey: null });
+      toast.success('Product deleted successfully');
+      fetchProducts();
+    } catch (error) {
+      toast.error('Failed to delete product');
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setDeleteId(null);
+    }
   };
 
   const resetForm = () => {
     form.reset();
     setEditingProduct(null);
-    setImageFile(null);
-    setImagePreview(null);
+    setImageFiles([]);
+    setImagePreviews([]);
+    setVideoFile(null);
+    setVideoPreview(null);
   };
 
   return (
@@ -159,11 +253,12 @@ const AdminProducts = () => {
         <Header />
 
         <main className="flex-1 py-20 bg-muted">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-4xl font-bold font-serif mb-2">Manage Products</h1>
-                <p className="text-muted-foreground">Add, edit, or remove products from your catalog</p>
+                <p className="text-muted-foreground">Add, edit, or remove products (Min 2 images required)</p>
               </div>
               <Dialog open={isDialogOpen} onOpenChange={(open) => {
                 setIsDialogOpen(open);
@@ -192,7 +287,6 @@ const AdminProducts = () => {
                             <FormControl>
                               <Input
                                 placeholder="Bridal Necklace"
-
                                 {...field}
                                 className="text-foreground placeholder:text-muted-foreground"
                               />
@@ -270,29 +364,97 @@ const AdminProducts = () => {
                         name="image"
                         render={() => (
                           <FormItem>
-                            <FormLabel>Product Image</FormLabel>
+                            <FormLabel>Product Images (Min 2, Max 5)</FormLabel>
                             <FormControl>
                               <div className="mt-2">
                                 <Input
                                   type="file"
-                                  accept="image/*"
-                                  className="text-foreground"
+                                  accept="image/jpeg,image/png,image/webp,image/avif"
+                                  multiple
+                                  className="text-foreground mb-4"
                                   onChange={handleImageChange}
                                 />
-                                {imagePreview && (
-                                  <div className="mt-4 relative inline-block">
-                                    <img
-                                      src={imagePreview}
-                                      alt="Preview"
-                                      className="w-32 h-32 object-cover rounded-lg shadow-sm border border-border"
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                  {imagePreviews.map((preview, index) => (
+                                    <div key={index} className="relative aspect-square">
+                                      <img
+                                        src={preview}
+                                        alt={`Preview ${index}`}
+                                        className="w-full h-full object-cover rounded-lg shadow-sm border border-border"
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={() => removeImage(index)}
+                                        className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:bg-destructive/90 transition-colors"
+                                      >
+                                        <X className="w-3 h-3" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                  {imagePreviews.length < 5 && (
+                                    <div className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/20 flex flex-col items-center justify-center text-muted-foreground text-xs p-2 text-center">
+                                      <Plus className="w-6 h-6 mb-1 opacity-20" />
+                                      <span>Add Image</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Stock Status / Badge</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Normal" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="normal">Normal</SelectItem>
+                                <SelectItem value="limited">Limited Edition</SelectItem>
+                                <SelectItem value="low_stock">Low Stock</SelectItem>
+                                <SelectItem value="best_seller">Best Seller</SelectItem>
+                                <SelectItem value="new_arrival">New Arrival</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="video"
+                        render={() => (
+                          <FormItem>
+                            <FormLabel>Product Video (Optional, Max 20MB)</FormLabel>
+                            <FormControl>
+                              <div className="mt-2">
+                                <Input
+                                  type="file"
+                                  accept="video/mp4,video/webm"
+                                  className="text-foreground mb-4"
+                                  onChange={handleVideoChange}
+                                />
+                                {videoPreview && (
+                                  <div className="relative aspect-video rounded-xl overflow-hidden border border-border bg-black">
+                                    <video 
+                                      src={videoPreview} 
+                                      className="w-full h-full object-contain"
+                                      controls
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => {
-                                        setImageFile(null);
-                                        setImagePreview(null);
-                                      }}
-                                      className="absolute -top-2 -right-2 w-6 h-6 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:bg-destructive/90 transition-colors"
+                                      onClick={removeVideo}
+                                      className="absolute top-2 right-2 w-8 h-8 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center hover:bg-destructive/90 transition-colors z-10"
                                     >
                                       <X className="w-4 h-4" />
                                     </button>
@@ -305,7 +467,7 @@ const AdminProducts = () => {
                         )}
                       />
 
-                      <div className="flex gap-3">
+                      <div className="flex gap-3 pt-4">
                         <Button type="submit" className="flex-1">
                           {editingProduct ? 'Update Product' : 'Create Product'}
                         </Button>
@@ -326,6 +488,7 @@ const AdminProducts = () => {
               </Dialog>
             </div>
 
+
             {isLoading ? (
               <div className="text-center py-12">
                 <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -336,7 +499,13 @@ const AdminProducts = () => {
                 {products.map((product) => (
                   <div key={product.id} className="bg-card rounded-2xl overflow-hidden shadow-sm flex flex-col">
                     <div className="aspect-square relative bg-muted">
-                      {product.image ? (
+                      {Array.isArray(product.image) && product.image.length > 0 ? (
+                        <img
+                          src={pb.files.getUrl(product, product.image[0], { thumb: '300x300' })}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : product.image && typeof product.image === 'string' ? (
                         <img
                           src={pb.files.getUrl(product, product.image, { thumb: '300x300' })}
                           alt={product.name}
@@ -355,7 +524,7 @@ const AdminProducts = () => {
                       </p>
                       {product.price && (
                         <p className="text-lg font-bold text-primary mb-4">
-                          ₹{Number(product.price).toLocaleString('en-IN')}
+                          {formatPrice(product.price)}
                         </p>
                       )}
                       <div className="flex gap-2 mt-auto">
@@ -371,7 +540,10 @@ const AdminProducts = () => {
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => handleDelete(product.id)}
+                          onClick={() => {
+                            setDeleteId(product.id);
+                            setIsDeleteDialogOpen(true);
+                          }}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -400,6 +572,16 @@ const AdminProducts = () => {
 
         <Footer />
       </div>
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Product"
+        description="Are you sure you want to delete this product? This action cannot be undone."
+        confirmText="Delete"
+        variant="destructive"
+      />
     </>
   );
 };

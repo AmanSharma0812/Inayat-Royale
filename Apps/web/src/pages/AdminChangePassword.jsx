@@ -8,6 +8,7 @@ import pb from '@/lib/pocketbaseClient';
 import { useAuth } from '@/hooks/useAuth';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -121,7 +122,8 @@ const AdminChangePassword = () => {
         <Header />
 
         <main className="flex-1 py-20 bg-muted">
-          <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-lg mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
 
             {/* Header */}
             <div className="mb-8">

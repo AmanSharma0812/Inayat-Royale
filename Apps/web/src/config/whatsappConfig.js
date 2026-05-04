@@ -1,1 +1,0 @@
-export const SHOP_WHATSAPP_NUMBER = '919876543210';

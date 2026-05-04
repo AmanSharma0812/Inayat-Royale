@@ -5,6 +5,7 @@ import { Package, FolderOpen, MessageSquare, ArrowRight, KeyRound } from 'lucide
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -82,7 +83,8 @@ const AdminDashboard = () => {
         <Header />
 
         <main className="flex-1 py-20 bg-muted">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
             <div className="mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 font-serif">Admin Dashboard</h1>
               <p className="text-xl text-muted-foreground">

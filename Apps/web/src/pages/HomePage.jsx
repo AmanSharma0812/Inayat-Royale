@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE, LOGO_URL, WHATSAPP_NUMBER } from '@/config/seo';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Shield, Award, Clock, MessageCircle } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 
 const HomePage = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -153,7 +154,7 @@ const HomePage = () => {
                     key={category.id}
                     category={category}
                     index={index}
-                    onClick={() => window.location.href = '/products'}
+                    onClick={() => navigate('/products')}
                   />
                 ))}
               </div>

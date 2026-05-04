@@ -7,12 +7,14 @@ import { Pencil, Trash2, Plus, FolderOpen } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import BackButton from '@/components/BackButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
+import ConfirmDialog from '@/components/ConfirmDialog';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -24,6 +26,8 @@ const AdminCategories = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -83,16 +87,18 @@ const AdminCategories = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category? This may affect products using this category.')) {
-      try {
-        await pb.collection('categories').delete(id, { requestKey: null });
-        toast.success('Category deleted successfully');
-        fetchCategories();
-      } catch (error) {
-        const msg = error?.response?.message || error?.message || 'Unknown error';
-        toast.error(`Failed to delete category: ${msg}`);
-      }
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await pb.collection('categories').delete(deleteId, { requestKey: null });
+      toast.success('Category deleted successfully');
+      fetchCategories();
+    } catch (error) {
+      const msg = error?.response?.message || error?.message || 'Unknown error';
+      toast.error(`Failed to delete category: ${msg}`);
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setDeleteId(null);
     }
   };
 
@@ -112,7 +118,8 @@ const AdminCategories = () => {
         <Header />
 
         <main className="flex-1 py-20 bg-muted">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <BackButton className="mb-8" />
             <div className="flex justify-between items-center mb-8">
               <div>
                 <h1 className="text-4xl font-bold font-serif mb-2">Manage Categories</h1>
@@ -229,7 +236,10 @@ const AdminCategories = () => {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDelete(category.id)}
+                        onClick={() => {
+                          setDeleteId(category.id);
+                          setIsDeleteDialogOpen(true);
+                        }}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -257,6 +267,16 @@ const AdminCategories = () => {
 
         <Footer />
       </div>
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+        title="Delete Category"
+        description="Are you sure you want to delete this category? This may affect products using this category. This action cannot be undone."
+        confirmText="Delete"
+        variant="destructive"
+      />
     </>
   );
 };

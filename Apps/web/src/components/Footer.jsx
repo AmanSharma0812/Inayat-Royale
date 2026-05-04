@@ -1,9 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, MessageCircle, Mail, Phone, Lock, LogOut } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import ConfirmDialog from './ConfirmDialog';
+import { WHATSAPP_NUMBER } from '@/config/seo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { isAuthenticated, logout } = useAuth();
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = React.useState(false);
+
+  const handleLogout = () => {
+    logout();
+    setIsLogoutDialogOpen(false);
+  };
 
   return (
     <footer className="bg-secondary text-secondary-foreground border-t border-border">
@@ -52,10 +62,6 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-6 font-serif text-primary">Contact Info</h3>
             <ul className="space-y-4">
-              <li className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 mt-0.5 text-primary flex-shrink-0" />
-                <span className="text-sm text-secondary-foreground/80">Mumbai, Maharashtra, India</span>
-              </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary flex-shrink-0" />
                 <span className="text-sm text-secondary-foreground/80">+91 98145 89421</span>
@@ -71,20 +77,13 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-6 font-serif text-primary">Connect With Us</h3>
             <div className="flex space-x-4 mb-6">
-              <a href="#" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
-                <Facebook className="w-5 h-5" />
-              </a>
               <a href="https://instagram.com/inayat_royale" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
                 <Instagram className="w-5 h-5" />
               </a>
 
-              <a href="#" className="w-10 h-10 rounded-lg bg-secondary-foreground/5 hover:bg-primary hover:text-primary-foreground flex items-center justify-center transition-all duration-200">
-                <Twitter className="w-5 h-5" />
-              </a>
             </div>
             <a
-              href="https://wa.me/919814589421"
-
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[#25D366] text-white rounded-lg hover:bg-[#20BA5A] transition-all duration-200 shadow-lg shadow-[#25D366]/20"
@@ -96,10 +95,31 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-secondary-foreground/10">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-secondary-foreground/60">
-              © {currentYear} Inayat Royale. All rights reserved.
-            </p>
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+              <p className="text-sm text-secondary-foreground/60">
+                © {currentYear} Inayat Royale. All rights reserved.
+              </p>
+              <div className="flex items-center gap-4">
+                <Link 
+                  to="/admin" 
+                  className="text-xs text-secondary-foreground/40 hover:text-primary flex items-center gap-1.5 transition-colors duration-200"
+                >
+                  <Lock className="w-3 h-3" />
+                  Admin Panel
+                </Link>
+                {isAuthenticated && (
+                  <button 
+                    onClick={() => setIsLogoutDialogOpen(true)}
+                    className="text-xs text-red-500/60 hover:text-red-500 flex items-center gap-1.5 transition-colors duration-200"
+                  >
+                    <LogOut className="w-3 h-3" />
+                    Logout
+                  </button>
+                )}
+              </div>
+            </div>
+            
             <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">
               <Link to="/shipping-policy" className="text-sm text-secondary-foreground/60 hover:text-primary transition-colors duration-200">
                 Shipping Policy
@@ -111,10 +131,19 @@ const Footer = () => {
                 Privacy Policy
               </Link>
             </div>
-
           </div>
         </div>
       </div>
+      
+      <ConfirmDialog
+        isOpen={isLogoutDialogOpen}
+        onClose={() => setIsLogoutDialogOpen(false)}
+        onConfirm={handleLogout}
+        title="Logout Confirmation"
+        description="Are you sure you want to log out of your admin account?"
+        confirmText="Logout"
+        variant="destructive"
+      />
     </footer>
   );
 };

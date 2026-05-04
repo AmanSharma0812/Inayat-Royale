@@ -59,20 +59,6 @@ const ContactPage = () => {
                 <div className="space-y-8">
                   <div className="flex items-start space-x-5">
                     <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 border border-primary/20">
-                      <MapPin className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2">Address</h3>
-                      <p className="text-muted-foreground max-w-none leading-relaxed">
-                        123 Royal Avenue, Zaveri Bazaar<br />
-                        Mumbai, Maharashtra 400002<br />
-                        India
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-5">
-                    <div className="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 border border-primary/20">
                       <Phone className="w-6 h-6 text-primary" />
                     </div>
                     <div>
@@ -110,19 +96,6 @@ const ContactPage = () => {
                 <h2 className="text-3xl font-bold mb-8 font-serif">Send us a Message</h2>
                 <ContactForm />
               </div>
-            </div>
-
-            <div className="rounded-3xl overflow-hidden shadow-2xl border border-border">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.8537935890845!2d72.83102631490214!3d18.94694098717804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce3d3b0a1c1f%3A0x3e3e3e3e3e3e3e3e!2sZaveri%20Bazaar%2C%20Mumbai!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
-                width="100%"
-                height="450"
-                style={{ border: 0, filter: 'grayscale(100%) invert(100%) contrast(80%)' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Inayat Royale Location"
-              ></iframe>
             </div>
           </div>
         </main>
