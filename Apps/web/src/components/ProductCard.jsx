@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button';
 import { WHATSAPP_NUMBER } from '@/config/seo';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useCart } from '@/contexts/CartContext';
 
 const ProductCard = ({ product, category }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { formatPrice } = useCurrency();
+  const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
   // Support both array and string (legacy) in the 'image' field
   const images = Array.isArray(product.image) && product.image.length > 0 
@@ -50,27 +52,7 @@ const ProductCard = ({ product, category }) => {
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
             />
             
-            {/* Wishlist Button */}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleWishlist(product);
-              }}
-              className={`absolute top-4 left-4 p-2.5 rounded-full backdrop-blur-md transition-all duration-300 z-10 shadow-lg ${
-                isWishlisted 
-                  ? 'bg-red-500 text-white scale-110' 
-                  : 'bg-white/70 text-gray-800 hover:bg-white hover:text-red-500'
-              }`}
-            >
-              <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-            </button>
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-              <div className="bg-white/90 backdrop-blur-sm text-black px-6 py-2 rounded-full font-semibold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <Eye className="w-4 h-4" />
-                View Details
-              </div>
-            </div>
+            {/* Category Badge */}
             {category && (
               <Badge className="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-primary-foreground shadow-md border-none px-3 py-1">
                 {category.name}
@@ -110,13 +92,27 @@ const ProductCard = ({ product, category }) => {
                   {formatPrice(product.price)}
                 </p>
               )}
-              <Button 
-                onClick={handleWhatsAppInquiry}
-                className="w-full h-11 bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-lg shadow-[#25D366]/20 transition-all duration-300 rounded-xl"
-              >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Inquire on WhatsApp
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={handleWhatsAppInquiry}
+                  className="flex-1 h-11 bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-lg shadow-[#25D366]/20 transition-all duration-300 rounded-xl px-2"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  <span className="text-xs font-bold">Inquire</span>
+                </Button>
+                <Button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    addToCart(product);
+                  }}
+                  variant="outline"
+                  className="flex-1 h-11 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl px-2"
+                >
+                  <Heart className="w-4 h-4 mr-2" />
+                  <span className="text-xs font-bold">Add to Wishlist</span>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

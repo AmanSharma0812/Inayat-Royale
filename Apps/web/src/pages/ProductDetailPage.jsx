@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { MessageCircle, ChevronLeft, ChevronRight, Share2 } from 'lucide-react';
+import { MessageCircle, ChevronLeft, ChevronRight, Share2, Heart } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { WHATSAPP_NUMBER } from '@/config/seo';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useCart } from '@/contexts/CartContext';
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
@@ -18,6 +19,7 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [api, setApi] = useState(null);
@@ -246,19 +248,30 @@ Link: ${window.location.href}`;
                   </p>
                 </div>
 
-                <div className="mt-auto space-y-4">
-                  <Button 
-                    onClick={handleWhatsAppInquiry}
-                    className="w-full h-16 text-lg bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-xl shadow-[#25D366]/20 transition-all duration-300 active:scale-[0.98] rounded-2xl"
-                  >
-                    <MessageCircle className="w-6 h-6 mr-3" />
-                    Inquire on WhatsApp
-                  </Button>
+                 <div className="mt-auto space-y-4">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button 
+                      onClick={handleWhatsAppInquiry}
+                      className="flex-[2] h-16 text-lg bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-xl shadow-[#25D366]/20 transition-all duration-300 active:scale-[0.98] rounded-2xl"
+                    >
+                      <MessageCircle className="w-6 h-6 mr-3" />
+                      Inquire on WhatsApp
+                    </Button>
+                    
+                    <Button 
+                      onClick={() => addToCart(product)}
+                      variant="outline"
+                      className="flex-1 h-16 text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-xl transition-all duration-300 active:scale-[0.98] rounded-2xl"
+                    >
+                      <Heart className="w-6 h-6 mr-3" />
+                      Add to Wishlist
+                    </Button>
+                  </div>
                   
                   <Button 
-                    variant="outline"
+                    variant="ghost"
                     onClick={handleShare}
-                    className="w-full h-14 rounded-2xl border-2"
+                    className="w-full h-12 rounded-2xl"
                   >
                     <Share2 className="w-5 h-5 mr-3" />
                     Share this Piece

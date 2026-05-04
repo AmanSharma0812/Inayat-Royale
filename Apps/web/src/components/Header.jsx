@@ -5,15 +5,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useCurrency, CURRENCIES } from '@/contexts/CurrencyContext';
+import { useCart } from '@/contexts/CartContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, logout } = useAuth();
   const { wishlist } = useWishlist();
   const { currency, changeCurrency } = useCurrency();
+  const { cartCount, setIsCartOpen } = useCart();
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -52,19 +53,17 @@ const Header = () => {
                 {link.name}
               </Link>
             ))}
-            <Link
-              to="/wishlist"
-              className={`relative p-2 rounded-full transition-colors ${
-                isActive('/wishlist') ? 'text-primary bg-primary/10' : 'text-foreground hover:bg-muted'
-              }`}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 rounded-full transition-colors text-foreground hover:bg-muted"
             >
-              <Heart className={`w-6 h-6 ${isActive('/wishlist') ? 'fill-current' : ''}`} />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-background">
-                  {wishlist.length}
+              <Heart className="w-6 h-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-background shadow-lg">
+                  {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
             
             <div className="w-24">
               <Select value={currency.code} onValueChange={changeCurrency}>
@@ -85,19 +84,18 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center space-x-2 md:hidden">
-            <Link
-              to="/wishlist"
-              className={`relative p-2 rounded-full transition-colors ${
-                isActive('/wishlist') ? 'text-primary bg-primary/10' : 'text-foreground hover:bg-muted'
-              }`}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 rounded-full transition-colors text-foreground hover:bg-muted"
             >
-              <Heart className={`w-5 h-5 ${isActive('/wishlist') ? 'fill-current' : ''}`} />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-background">
-                  {wishlist.length}
+              <Heart className="w-5 h-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-background shadow-md">
+                  {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
+
             <ThemeToggle />
             <button
               className="p-2 rounded-lg hover:bg-muted transition-colors duration-200"

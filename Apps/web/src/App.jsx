@@ -4,6 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { WishlistProvider } from '@/contexts/WishlistContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
+import { CartProvider } from '@/contexts/CartContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/sonner';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -25,6 +26,7 @@ import ProductDetailPage from '@/pages/ProductDetailPage';
 import WishlistPage from '@/pages/WishlistPage';
 import BridalConsultationPage from '@/pages/BridalConsultationPage';
 import NotFound from '@/pages/NotFound';
+import CartDrawer from '@/components/CartDrawer';
 
 function App() {
   return (
@@ -33,7 +35,8 @@ function App() {
         <AuthProvider>
           <WishlistProvider>
             <CurrencyProvider>
-              <Router>
+              <CartProvider>
+                <Router>
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -88,12 +91,14 @@ function App() {
                   </ProtectedAdminRoute>
                 } 
               />
-              <Route path="*" element={<NotFound />} />
+               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CartDrawer />
             <Toaster />
           </Router>
-        </CurrencyProvider>
-      </WishlistProvider>
+        </CartProvider>
+      </CurrencyProvider>
+    </WishlistProvider>
     </AuthProvider>
       </ThemeProvider>
     </HelmetProvider>
