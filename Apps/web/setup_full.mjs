@@ -99,6 +99,38 @@ async function setup() {
       console.log('✓ contacts already exists');
     }
 
+    // ---- 4. CREATE consultations ----
+    console.log('\nCreating "consultations" collection...');
+    try {
+      await pb.collections.create({
+        name: 'consultations',
+        type: 'base',
+        fields: [
+          { name: 'name',         type: 'text', required: true },
+          { name: 'email',        type: 'text' },
+          { name: 'phone',        type: 'text' },
+          { name: 'weddingDate',  type: 'text' },
+          { name: 'needs',        type: 'text' },
+          { name: 'message',      type: 'text' },
+          { name: 'type',         type: 'text' },
+          {
+            name:      'status',
+            type:      'select',
+            maxSelect: 1,
+            values:    ['new', 'contacted', 'completed']
+          }
+        ],
+        listRule:   '@request.auth.id != ""',
+        viewRule:   '@request.auth.id != ""',
+        createRule: '',
+        updateRule: '@request.auth.id != ""',
+        deleteRule: '@request.auth.id != ""'
+      });
+      console.log('✓ consultations created!');
+    } catch (e) {
+      console.log('✓ consultations already exists');
+    }
+
     console.log('\n✅ Setup complete! You can now log in at http://localhost:3000/admin-login');
     console.log('   Email:    admin@inayatroyale.com');
     console.log('   Password: admin123');

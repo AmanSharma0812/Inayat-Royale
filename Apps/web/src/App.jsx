@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/AuthProvider';
-import { WishlistProvider } from '@/contexts/WishlistContext';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { CartProvider } from '@/contexts/CartContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -33,7 +32,6 @@ function App() {
     <HelmetProvider>
       <ThemeProvider>
         <AuthProvider>
-          <WishlistProvider>
             <CurrencyProvider>
               <CartProvider>
                 <Router>
@@ -98,7 +96,6 @@ function App() {
           </Router>
         </CartProvider>
       </CurrencyProvider>
-    </WishlistProvider>
     </AuthProvider>
       </ThemeProvider>
     </HelmetProvider>

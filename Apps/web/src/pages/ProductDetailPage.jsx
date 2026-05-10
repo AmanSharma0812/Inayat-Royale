@@ -19,7 +19,7 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [api, setApi] = useState(null);
@@ -263,8 +263,8 @@ Link: ${window.location.href}`;
                       variant="outline"
                       className="flex-1 h-16 text-lg border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-xl transition-all duration-300 active:scale-[0.98] rounded-2xl"
                     >
-                      <Heart className="w-6 h-6 mr-3" />
-                      Add to Wishlist
+                      <Heart className={`w-6 h-6 mr-3 ${cart.some(item => item.id === product.id) ? 'fill-current' : ''}`} />
+                      {cart.some(item => item.id === product.id) ? 'In Wishlist' : 'Add to Wishlist'}
                     </Button>
                   </div>
                   

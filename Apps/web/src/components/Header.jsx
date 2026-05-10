@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, LogOut, Heart } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { useCurrency, CURRENCIES } from '@/contexts/CurrencyContext';
 import { useCart } from '@/contexts/CartContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -12,7 +11,6 @@ import ThemeToggle from './ThemeToggle';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { wishlist } = useWishlist();
   const { currency, changeCurrency } = useCurrency();
   const { cartCount, setIsCartOpen } = useCart();
 

@@ -5,15 +5,12 @@ import pb from '@/lib/pocketbaseClient';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { WHATSAPP_NUMBER } from '@/config/seo';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useCart } from '@/contexts/CartContext';
 
 const ProductCard = ({ product, category }) => {
-  const { toggleWishlist, isInWishlist } = useWishlist();
   const { formatPrice } = useCurrency();
-  const { addToCart } = useCart();
-  const isWishlisted = isInWishlist(product.id);
+  const { addToCart, cart } = useCart();
   // Support both array and string (legacy) in the 'image' field
   const images = Array.isArray(product.image) && product.image.length > 0 
     ? product.image 
@@ -109,8 +106,10 @@ const ProductCard = ({ product, category }) => {
                   variant="outline"
                   className="flex-1 h-11 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 rounded-xl px-2"
                 >
-                  <Heart className="w-4 h-4 mr-2" />
-                  <span className="text-xs font-bold">Add to Wishlist</span>
+                  <Heart className={`w-4 h-4 mr-2 ${cart.some(item => item.id === product.id) ? 'fill-current' : ''}`} />
+                  <span className="text-xs font-bold">
+                    {cart.some(item => item.id === product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                  </span>
                 </Button>
               </div>
             </div>

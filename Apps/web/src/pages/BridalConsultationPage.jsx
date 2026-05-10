@@ -8,41 +8,34 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import pb from '@/lib/pocketbaseClient';
+import { WHATSAPP_NUMBER } from '@/config/seo';
 
 const BridalConsultationPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     
-    try {
-      // Save to a new collection 'consultations' in PocketBase
-      // Fallback to 'contacts' if consultations doesn't exist
-      try {
-        await pb.collection('consultations').create({
-          ...data,
-          type: 'bridal'
-        });
-      } catch (err) {
-        await pb.collection('contacts').create({
-          name: data.name,
-          email: data.email,
-          message: `BRIDAL CONSULTATION REQUEST:\nWedding Date: ${data.weddingDate}\nPhone: ${data.phone}\nNeeds: ${data.needs}\nAdditional Info: ${data.message}`
-        });
-      }
-      
-      toast.success("Royal request received! Our bridal consultant will contact you within 24 hours.");
-      e.target.reset();
-    } catch (error) {
-      toast.error("Failed to send request. Please try again or contact us via WhatsApp.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const message = `*Royal Bridal Consultation Request*\n\n` +
+      `*Name:* ${data.name}\n` +
+      `*Phone:* ${data.phone}\n` +
+      `*Email:* ${data.email}\n` +
+      `*Wedding Date:* ${data.weddingDate}\n` +
+      `*Interested In:* ${data.needs.replace('_', ' ')}\n` +
+      `*Details:* ${data.message}`;
+
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    
+    // Redirect to WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    toast.success("Opening WhatsApp to send your royal request!");
+    setIsSubmitting(false);
+    e.target.reset();
   };
 
   return (

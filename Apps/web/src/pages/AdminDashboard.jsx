@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Package, FolderOpen, MessageSquare, ArrowRight, KeyRound } from 'lucide-react';
+import { Package, FolderOpen, MessageSquare, ArrowRight, KeyRound, Sparkles } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -18,20 +18,27 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        const [products, categories, contacts] = await Promise.all([
-          pb.collection('products').getList(1, 1, { requestKey: null }),
-          pb.collection('categories').getList(1, 1, { requestKey: null }),
-          pb.collection('contacts').getList(1, 1, { requestKey: null })
-        ]);
-        setStats({
-          products: products.totalItems,
-          categories: categories.totalItems,
-          contacts: contacts.totalItems
-        });
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-      }
+      const getCount = async (collection) => {
+        try {
+          const result = await pb.collection(collection).getList(1, 1, { requestKey: null });
+          return result.totalItems;
+        } catch (e) {
+          console.warn(`Collection ${collection} not found or inaccessible`);
+          return 0;
+        }
+      };
+
+      const [products, categories, contacts] = await Promise.all([
+        getCount('products'),
+        getCount('categories'),
+        getCount('contacts')
+      ]);
+
+      setStats({
+        products,
+        categories,
+        contacts
+      });
     };
     fetchStats();
   }, []);

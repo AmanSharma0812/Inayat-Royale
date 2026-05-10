@@ -37,6 +37,8 @@ const AdminProducts = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [existingImages, setExistingImages] = useState([]); // Track existing file names
+  const [deletedImages, setDeletedImages] = useState([]); // Track file names to delete
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
@@ -85,27 +87,17 @@ const AdminProducts = () => {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files || []);
     if (files.length > 0) {
-      if (files.length + imageFiles.length > 5) {
-        toast.error('You can only upload up to 5 images');
+      if (files.length + imageFiles.length + existingImages.length > 5) {
+        toast.error('You can only have up to 5 images total');
         return;
       }
 
       const newFiles = [...imageFiles, ...files];
       setImageFiles(newFiles);
 
-      const newPreviews = [];
-      let loaded = 0;
-      
       files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          newPreviews.push(reader.result);
-          loaded++;
-          if (loaded === files.length) {
-            setImagePreviews([...imagePreviews, ...newPreviews]);
-          }
-        };
-        reader.readAsDataURL(file);
+        const url = URL.createObjectURL(file);
+        setImagePreviews(prev => [...prev, url]);
       });
     }
   };
@@ -117,20 +109,46 @@ const AdminProducts = () => {
         toast.error('Video must be less than 20MB');
         return;
       }
+      if (videoPreview && videoPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(videoPreview);
+      }
       setVideoFile(file);
       setVideoPreview(URL.createObjectURL(file));
     }
   };
 
   const removeVideo = () => {
+    if (videoPreview && videoPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(videoPreview);
+    }
     setVideoFile(null);
     setVideoPreview(null);
+    if (editingProduct && editingProduct.video) {
+      setDeletedImages(prev => [...prev, editingProduct.video]);
+    }
   };
 
   const removeImage = (index) => {
-    const newFiles = [...imageFiles];
-    newFiles.splice(index, 1);
-    setImageFiles(newFiles);
+    // If it's an existing image (from the server)
+    if (index < existingImages.length) {
+      const fileName = existingImages[index];
+      setDeletedImages(prev => [...prev, fileName]);
+      
+      const newExisting = [...existingImages];
+      newExisting.splice(index, 1);
+      setExistingImages(newExisting);
+    } else {
+      // It's a newly added file
+      const fileIndex = index - existingImages.length;
+      const newFiles = [...imageFiles];
+      newFiles.splice(fileIndex, 1);
+      setImageFiles(newFiles);
+      
+      // Revoke the blob URL to prevent memory leaks
+      if (imagePreviews[index].startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreviews[index]);
+      }
+    }
 
     const newPreviews = [...imagePreviews];
     newPreviews.splice(index, 1);
@@ -138,7 +156,8 @@ const AdminProducts = () => {
   };
 
   const onSubmit = async (data) => {
-    if (!editingProduct && imageFiles.length < 2) {
+    const totalImages = existingImages.length + imageFiles.length;
+    if (totalImages < 2) {
       toast.error('At least 2 images are required');
       return;
     }
@@ -157,6 +176,18 @@ const AdminProducts = () => {
       // Append all new image files
       imageFiles.forEach(file => {
         formData.append('image', file);
+      });
+
+      // Handle deletions for PocketBase
+      deletedImages.forEach(fileName => {
+        // If the filename belongs to the image field
+        if (editingProduct?.image?.includes(fileName)) {
+          formData.append('image-', fileName);
+        }
+        // If the filename belongs to the video field
+        if (editingProduct?.video === fileName) {
+          formData.append('video-', fileName);
+        }
       });
 
       // Append new video file if any
@@ -204,10 +235,15 @@ const AdminProducts = () => {
     });
     
     if (product.image && Array.isArray(product.image)) {
+      setExistingImages(product.image);
       const urls = product.image.map(img => pb.files.getUrl(product, img));
       setImagePreviews(urls);
     } else if (product.image && typeof product.image === 'string') {
+      setExistingImages([product.image]);
       setImagePreviews([pb.files.getUrl(product, product.image)]);
+    } else {
+      setExistingImages([]);
+      setImagePreviews([]);
     }
 
     if (product.video) {
@@ -216,6 +252,7 @@ const AdminProducts = () => {
       setVideoPreview(null);
     }
     
+    setDeletedImages([]); // Reset deleted list on edit start
     setIsDialogOpen(true);
   };
 
@@ -237,8 +274,17 @@ const AdminProducts = () => {
     form.reset();
     setEditingProduct(null);
     setImageFiles([]);
+    // Revoke blob URLs for image previews
+    imagePreviews.forEach(url => {
+      if (url.startsWith('blob:')) URL.revokeObjectURL(url);
+    });
     setImagePreviews([]);
+    setExistingImages([]);
+    setDeletedImages([]);
     setVideoFile(null);
+    if (videoPreview && videoPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(videoPreview);
+    }
     setVideoPreview(null);
   };
 

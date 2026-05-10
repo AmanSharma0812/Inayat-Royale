@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Heart, ShoppingBag, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useWishlist } from '@/contexts/WishlistContext';
+import { useCart } from '@/contexts/CartContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const WishlistPage = () => {
-  const { wishlist } = useWishlist();
+  const { cart: wishlist } = useCart();
 
   return (
     <>
