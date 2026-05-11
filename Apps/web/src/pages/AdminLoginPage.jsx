@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import BackButton from '@/components/BackButton';
 
 const formSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
+  email: z.string().min(1, 'Please enter your username or email'),
   password: z.string().min(8, 'Password must be at least 8 characters')
 });
 
@@ -78,11 +78,10 @@ const AdminLoginPage = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Username</FormLabel>
                       <FormControl>
                         <Input 
-                          type="email" 
-                          placeholder="admin@inayatroyale.com" 
+                          placeholder="Enter your username" 
                           {...field}
                           className="text-foreground placeholder:text-muted-foreground bg-background/50"
                         />
