@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://inayat-royale.pockethost.io');
+const pb = new PocketBase('https://inayatroyalee.pockethost.io/');
 
 async function setup() {
   try {
