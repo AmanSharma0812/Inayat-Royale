@@ -87,9 +87,9 @@ const AboutPage = () => {
                 >
                   <div className="relative p-4 border border-primary/20 rounded-3xl">
                     <img
-                      src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908"
-                      alt="Jewellery workshop"
-                      className="rounded-2xl shadow-xl w-full"
+                      src="/about_heritage.png"
+                      alt="Inayat Royale heritage craftsmanship"
+                      className="rounded-2xl shadow-xl w-full hover:scale-[1.02] transition-transform duration-500"
                     />
                   </div>
                 </motion.div>
