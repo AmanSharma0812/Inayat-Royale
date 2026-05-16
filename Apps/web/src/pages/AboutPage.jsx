@@ -178,9 +178,9 @@ const AboutPage = () => {
                 >
                   <div className="relative p-4 border border-primary/20 rounded-3xl">
                     <img
-                      src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0"
-                      alt="Quality jewellery"
-                      className="rounded-2xl shadow-xl w-full"
+                      src="/about_quality.png"
+                      alt="Inayat Royale premium quality jewellery"
+                      className="rounded-2xl shadow-xl w-full hover:scale-[1.02] transition-transform duration-500"
                     />
                   </div>
                 </motion.div>
