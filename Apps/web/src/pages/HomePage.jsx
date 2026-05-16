@@ -96,40 +96,47 @@ const HomePage = () => {
         <main className="flex-1">
           <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0">
-              <img
-                src="/hero_banner.jpg"
-                alt="Inayat Royale Bridal Jewellery Collection"
+              <motion.img
+                initial={{ scale: 1.1, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                src="/hero_banner_luxury.png"
+                alt="Inayat Royale Luxury Jewellery Collection"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40"></div>
+              <div className="absolute inset-0 bg-black/40"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80"></div>
             </div>
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1, delay: 0.5 }}
                 className="flex flex-col items-center"
               >
-                <img 
+                <motion.img 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
                   src="/logo.png" 
                   alt="Inayat Royale Logo" 
-                  className="h-36 md:h-48 w-auto object-contain mb-8 drop-shadow-2xl"
+                  className="h-36 md:h-48 w-auto object-contain mb-8 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"
                 />
-                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight font-serif">
-                  Where Every Sparkle<br /><span className="text-primary">Tells a Royal Story</span>
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight font-serif tracking-tight">
+                  Where Every Sparkle<br /><span className="text-primary italic">Tells a Royal Story</span>
                 </h1>
-                <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto font-light">
+                <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto font-light tracking-wide">
                   Discover exquisite handcrafted jewellery that celebrates life's most precious and royal moments
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-6 justify-center">
                   <Link to="/products">
-                    <Button size="lg" className="text-lg px-8 h-14">
+                    <Button size="lg" className="text-lg px-10 h-16 rounded-full shadow-2xl shadow-primary/20 hover:scale-105 transition-transform duration-300">
                       Explore Collection
                     </Button>
                   </Link>
                   <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
-                    <Button size="lg" variant="outline" className="text-lg px-8 h-14 bg-white/5 backdrop-blur-sm text-white border-white/20 hover:bg-primary hover:text-primary-foreground hover:border-primary">
+                    <Button size="lg" variant="outline" className="text-lg px-10 h-16 rounded-full bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white hover:text-black transition-all duration-300">
                       <MessageCircle className="w-5 h-5 mr-2" />
                       WhatsApp Enquiry
                     </Button>
@@ -137,6 +144,22 @@ const HomePage = () => {
                 </div>
               </motion.div>
             </div>
+
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 1 }}
+              className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden md:block"
+            >
+              <div className="flex flex-col items-center gap-3">
+                <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-medium">Scroll to explore</span>
+                <motion.div 
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  className="w-px h-16 bg-gradient-to-b from-primary via-primary/50 to-transparent"
+                />
+              </div>
+            </motion.div>
           </section>
 
           <section className="py-24 bg-background">
