@@ -100,7 +100,7 @@ const HomePage = () => {
                 initial={{ scale: 1.1, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
-                src="/hero_banner_luxury.png"
+                src="/hero_banner_luxury.jpeg"
                 alt="Inayat Royale Luxury Jewellery Collection"
                 className="w-full h-full object-cover"
               />
@@ -217,7 +217,7 @@ const HomePage = () => {
                 >
                   <div className="absolute -inset-4 bg-primary/10 rounded-3xl transform rotate-3"></div>
                   <img
-                    src="/jewellery_craftsmanship.png"
+                    src="/jewellery_craftsmanship.jpeg"
                     alt="Inayat Royale premium jewellery craftsmanship"
                     className="relative rounded-2xl shadow-2xl w-full border border-border hover:scale-[1.02] transition-transform duration-500"
                   />
