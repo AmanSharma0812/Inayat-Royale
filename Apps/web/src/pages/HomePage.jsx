@@ -217,9 +217,9 @@ const HomePage = () => {
                 >
                   <div className="absolute -inset-4 bg-primary/10 rounded-3xl transform rotate-3"></div>
                   <img
-                    src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a"
-                    alt="Jewellery craftsmanship"
-                    className="relative rounded-2xl shadow-2xl w-full border border-border"
+                    src="/jewellery_craftsmanship.png"
+                    alt="Inayat Royale premium jewellery craftsmanship"
+                    className="relative rounded-2xl shadow-2xl w-full border border-border hover:scale-[1.02] transition-transform duration-500"
                   />
                 </motion.div>
               </div>
