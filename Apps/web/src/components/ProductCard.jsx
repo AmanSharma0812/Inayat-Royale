@@ -4,13 +4,14 @@ import { MessageCircle, Eye, Heart } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { WHATSAPP_NUMBER } from '@/config/seo';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useCart } from '@/contexts/CartContext';
+import { useInquiry } from '@/contexts/InquiryContext';
 
 const ProductCard = ({ product, category }) => {
   const { formatPrice } = useCurrency();
   const { addToCart, cart } = useCart();
+  const { openProductInquiry } = useInquiry();
   // Support both array and string (legacy) in the 'image' field
   const images = Array.isArray(product.image) && product.image.length > 0 
     ? product.image 
@@ -20,17 +21,6 @@ const ProductCard = ({ product, category }) => {
     ? pb.files.getUrl(product, images[0], { thumb: '400x400' })
     : 'https://images.unsplash.com/photo-1576053139778-7e32f2ae3cf4?w=400&h=400&fit=crop';
 
-  const handleWhatsAppInquiry = (e) => {
-    e.preventDefault(); // Prevent navigation when clicking the button
-    e.stopPropagation();
-    const categoryName = category?.name || 'Uncategorized';
-    const priceText = product.price ? formatPrice(product.price) : 'Price on request';
-    const descriptionText = product.description ? product.description : 'No description available';
-    
-    const message = `Hi, I'm interested in this product: ${product.name} - Category: ${categoryName} - Price: ${priceText} - Description: ${descriptionText} - Link: ${window.location.origin}/product/${product.id}`;
-    
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-  };
 
   return (
     <motion.div
@@ -91,7 +81,11 @@ const ProductCard = ({ product, category }) => {
               )}
               <div className="flex gap-2">
                 <Button 
-                  onClick={handleWhatsAppInquiry}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openProductInquiry(product, category);
+                  }}
                   className="flex-1 h-11 bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-lg shadow-[#25D366]/20 transition-all duration-300 rounded-xl px-2"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />

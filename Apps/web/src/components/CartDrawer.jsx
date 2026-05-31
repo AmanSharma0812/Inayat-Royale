@@ -5,21 +5,17 @@ import { useCurrency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { Trash2, Plus, Minus, Heart, MessageCircle } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
-import { WHATSAPP_NUMBER } from '@/config/seo';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useInquiry } from '@/contexts/InquiryContext';
 
 const CartDrawer = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, isCartOpen, setIsCartOpen } = useCart();
   const { formatPrice } = useCurrency();
+  const { openWishlistInquiry } = useInquiry();
 
   const handleCheckout = () => {
-    const itemsList = cart.map(item => 
-      `- ${item.name} (Qty: ${item.quantity}, Price: ${formatPrice(item.price * item.quantity)})`
-    ).join('\n');
-    
-    const message = `Hi Inayat Royale, I'd like to inquire about the following items in my wishlist:\n\n${itemsList}\n\n*Total Estimate:* ${formatPrice(cartTotal)}\n\nPlease let me know the availability and next steps!`;
-    
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    setIsCartOpen(false);
+    openWishlistInquiry(cart);
   };
 
   return (

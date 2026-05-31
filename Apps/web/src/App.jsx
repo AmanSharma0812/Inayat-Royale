@@ -5,7 +5,9 @@ import { AuthProvider } from '@/contexts/AuthProvider';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { CartProvider } from '@/contexts/CartContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { InquiryProvider } from '@/contexts/InquiryContext';
 import { Toaster } from '@/components/ui/sonner';
+import InquiryModal from '@/components/InquiryModal';
 import ScrollToTop from '@/components/ScrollToTop';
 import ProtectedAdminRoute from '@/components/ProtectedAdminRoute.jsx';
 import HomePage from '@/pages/HomePage';
@@ -33,6 +35,7 @@ function App() {
         <AuthProvider>
           <CurrencyProvider>
             <CartProvider>
+              <InquiryProvider>
               <Router>
                 <ScrollToTop />
                 <Routes>
@@ -90,8 +93,10 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <CartDrawer />
+                <InquiryModal />
                 <Toaster />
               </Router>
+              </InquiryProvider>
             </CartProvider>
           </CurrencyProvider>
         </AuthProvider>

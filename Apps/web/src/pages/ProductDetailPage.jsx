@@ -9,9 +9,9 @@ import BackButton from '@/components/BackButton';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { WHATSAPP_NUMBER } from '@/config/seo';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useCart } from '@/contexts/CartContext';
+import { useInquiry } from '@/contexts/InquiryContext';
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
@@ -20,6 +20,7 @@ const ProductDetailPage = () => {
   const navigate = useNavigate();
   const { formatPrice } = useCurrency();
   const { addToCart, cart } = useCart();
+  const { openProductInquiry } = useInquiry();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [api, setApi] = useState(null);
@@ -55,15 +56,7 @@ const ProductDetailPage = () => {
 
   const handleWhatsAppInquiry = () => {
     if (!product) return;
-    const categoryName = product.expand?.category?.name || 'Uncategorized';
-    const priceText = product.price ? formatPrice(product.price) : 'Price on request';
-    
-    const message = `Hi, I'm interested in this product: ${product.name}
-Category: ${categoryName}
-Price: ${priceText}
-Link: ${window.location.href}`;
-    
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    openProductInquiry(product, product.expand?.category);
   };
 
   const handleShare = () => {
