@@ -110,8 +110,9 @@ const AdminCategories = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Categories - Admin Dashboard</title>
-        <meta name="description" content="Manage product categories for Luxury Jewels." />
+        <title>Manage Categories - Admin Dashboard | Inayat Royale</title>
+        <meta name="description" content="Manage product categories for Inayat Royale jewellery store." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen flex flex-col">

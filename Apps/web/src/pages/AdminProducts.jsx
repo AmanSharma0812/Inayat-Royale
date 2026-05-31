@@ -291,8 +291,9 @@ const AdminProducts = () => {
   return (
     <>
       <Helmet>
-        <title>Manage Products - Admin Dashboard</title>
-        <meta name="description" content="Manage product catalog for Luxury Jewels." />
+        <title>Manage Products - Admin Dashboard | Inayat Royale</title>
+        <meta name="description" content="Manage the product catalog for Inayat Royale jewellery store." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen flex flex-col">

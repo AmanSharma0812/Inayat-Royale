@@ -1,5 +1,16 @@
+/**
+ * @deprecated NOT IN USE
+ * This context was created for a standalone wishlist feature but is NOT currently
+ * imported or used anywhere in the app. The CartContext (CartContext.jsx) is being
+ * used as the wishlist instead (the "cart" IS the wishlist in Inayat Royale's UX).
+ *
+ * If you want to switch to a separate wishlist in the future, you can:
+ * 1. Import WishlistProvider in App.jsx and wrap the tree
+ * 2. Replace `useCart` with `useWishlist` in WishlistPage.jsx, ProductCard.jsx, etc.
+ */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
+
 
 const WishlistContext = createContext();
 

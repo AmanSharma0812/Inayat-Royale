@@ -91,6 +91,19 @@ const Footer = () => {
               <MessageCircle className="w-5 h-5" />
               <span className="text-sm font-medium">WhatsApp Us</span>
             </a>
+
+            {/* PhonePe Payment QR */}
+            <div className="mt-6">
+              <p className="text-xs font-semibold text-secondary-foreground/60 mb-3 uppercase tracking-wider">Scan to Pay</p>
+              <div className="inline-block bg-white rounded-xl p-2 shadow-md border border-border">
+                <img
+                  src="/Inayat royale payment.jpeg"
+                  alt="PhonePe QR Code - Scan to pay Inayat Royale"
+                  className="w-28 h-28 object-contain rounded-lg"
+                />
+              </div>
+              <p className="text-xs text-secondary-foreground/50 mt-2">Pay via PhonePe / UPI</p>
+            </div>
           </div>
         </div>
 

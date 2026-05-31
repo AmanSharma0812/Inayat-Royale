@@ -114,8 +114,9 @@ const AdminChangePassword = () => {
   return (
     <>
       <Helmet>
-        <title>Change Password - Admin Dashboard</title>
-        <meta name="description" content="Change your admin account password." />
+        <title>Change Password - Admin Dashboard | Inayat Royale</title>
+        <meta name="description" content="Change your admin account password for Inayat Royale." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen flex flex-col">

@@ -47,7 +47,9 @@ const AdminContacts = () => {
   return (
     <>
       <Helmet>
-        <title>Enquiries - Admin</title>
+        <title>Customer Enquiries - Admin | Inayat Royale</title>
+        <meta name="description" content="Manage customer contact form submissions for Inayat Royale." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen flex flex-col bg-background">

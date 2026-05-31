@@ -51,13 +51,14 @@ const AdminLoginPage = () => {
       <Helmet>
         <title>Inayat Royale - Admin Login</title>
         <meta name="description" content="Admin login portal for Inayat Royale management system." />
+        <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
       <div className="min-h-screen flex items-center justify-center bg-background px-4 relative overflow-hidden">
         <div className="absolute top-8 left-8 z-20">
           <BackButton />
         </div>
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1656042744506-1d3c6e2b013e')] bg-cover bg-center opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/hero_banner_luxury.jpeg')] bg-cover bg-center opacity-10"></div>
         
         <div className="w-full max-w-md relative z-10">
           <div className="bg-card/80 backdrop-blur-xl border border-border rounded-3xl shadow-2xl p-8 md:p-10">

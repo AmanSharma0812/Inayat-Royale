@@ -58,7 +58,7 @@ const AboutPage = () => {
 
         <main className="flex-1">
           <section className="py-24 bg-muted relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599643478524-fb66f70362f6?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-5"></div>
+            <div className="absolute inset-0 bg-[url('/about_heritage.jpeg')] bg-cover bg-center opacity-5"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-8">
               <BackButton className="mb-8" />
               <motion.div
