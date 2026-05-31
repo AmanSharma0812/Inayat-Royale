@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Package, FolderOpen, MessageSquare, ArrowRight, KeyRound, Sparkles } from 'lucide-react';
+import { Package, FolderOpen, MessageSquare, ArrowRight, KeyRound, Sparkles, ShoppingBag } from 'lucide-react';
 import pb from '@/lib/pocketbaseClient';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -13,14 +13,17 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState({
     products: 0,
     categories: 0,
-    contacts: 0
+    contacts: 0,
+    orders: 0
   });
 
   useEffect(() => {
     const fetchStats = async () => {
-      const getCount = async (collection) => {
+      const getCount = async (collection, filter = '') => {
         try {
-          const result = await pb.collection(collection).getList(1, 1, { requestKey: null });
+          const params = { requestKey: null };
+          if (filter) params.filter = filter;
+          const result = await pb.collection(collection).getList(1, 1, params);
           return result.totalItems;
         } catch (e) {
           console.warn(`Collection ${collection} not found or inaccessible`);
@@ -28,16 +31,18 @@ const AdminDashboard = () => {
         }
       };
 
-      const [products, categories, contacts] = await Promise.all([
+      const [products, categories, totalContacts, orders] = await Promise.all([
         getCount('products'),
         getCount('categories'),
-        getCount('contacts')
+        getCount('contacts'),
+        getCount('contacts', 'message ~ "isOrder"')
       ]);
 
       setStats({
         products,
         categories,
-        contacts
+        contacts: totalContacts - orders,
+        orders
       });
     };
     fetchStats();
@@ -67,6 +72,14 @@ const AdminDashboard = () => {
       count: stats.contacts,
       link: '/admin/contacts',
       color: 'text-purple-600'
+    },
+    {
+      title: 'Order History',
+      description: 'View customer order details & status',
+      icon: ShoppingBag,
+      count: stats.orders,
+      link: '/admin/orders',
+      color: 'text-rose-600'
     },
     {
       title: 'Change Password',

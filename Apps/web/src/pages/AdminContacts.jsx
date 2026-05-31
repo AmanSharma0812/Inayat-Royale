@@ -17,10 +17,18 @@ const AdminContacts = () => {
     setIsLoading(true);
     try {
       const result = await pb.collection('contacts').getList(1, 500, { 
-        sort: '-id',
+        sort: '-created',
         requestKey: null
       });
-      setContacts(result.items);
+      const enquiriesOnly = result.items.filter(item => {
+        try {
+          const parsed = JSON.parse(item.message);
+          return !parsed.isOrder;
+        } catch (e) {
+          return true;
+        }
+      });
+      setContacts(enquiriesOnly);
     } catch (error) {
       if (!pb.isAbort(error)) {
         toast.error('Failed to fetch enquiries');

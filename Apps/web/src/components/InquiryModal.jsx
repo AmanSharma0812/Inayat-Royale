@@ -8,6 +8,7 @@ import { WHATSAPP_NUMBER } from '@/config/seo';
 import { User, Phone, MapPin, Hash, MessageCircle, CheckCircle2, ArrowRight, Package } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import pb from '@/lib/pocketbaseClient';
 
 const INITIAL_FORM = { name: '', phone: '', address: '', pincode: '' };
 
@@ -18,6 +19,7 @@ const InquiryModal = () => {
   const [step, setStep] = useState(1); // 1 = customer details form, 2 = QR code
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,9 +39,48 @@ const InquiryModal = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (validate()) setStep(2);
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      const orderPayload = {
+        isOrder: true,
+        address: form.address,
+        pincode: form.pincode,
+        items: inquiryData.type === 'product'
+          ? [{
+              id: inquiryData.product.id,
+              name: inquiryData.product.name,
+              price: inquiryData.product.price,
+              quantity: 1
+            }]
+          : inquiryData.items.map(item => ({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity
+            })),
+        total: inquiryData.type === 'product'
+          ? (inquiryData.product.price || 0)
+          : inquiryData.items.reduce((sum, item) => sum + (item.price || 0) * item.quantity, 0)
+      };
+
+      await pb.collection('contacts').create({
+        name: form.name,
+        phone: form.phone,
+        message: JSON.stringify(orderPayload),
+        status: 'new'
+      }, { requestKey: null });
+
+      setStep(2);
+    } catch (error) {
+      console.error('Failed to save order details:', error);
+      toast.error('Failed to save order details. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const buildWhatsAppMessage = () => {
@@ -96,6 +137,7 @@ const InquiryModal = () => {
       setStep(1);
       setForm(INITIAL_FORM);
       setErrors({});
+      setIsSubmitting(false);
     }, 300);
   };
 
@@ -240,9 +282,9 @@ const InquiryModal = () => {
                   {errors.pincode && <p className="text-xs text-destructive">{errors.pincode}</p>}
                 </div>
 
-                <Button type="submit" className="w-full h-12 rounded-2xl mt-2 shadow-lg shadow-primary/20">
-                  Continue to Payment
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                <Button type="submit" disabled={isSubmitting} className="w-full h-12 rounded-2xl mt-2 shadow-lg shadow-primary/20">
+                  {isSubmitting ? 'Saving Order...' : 'Continue to Payment'}
+                  {!isSubmitting && <ArrowRight className="w-4 h-4 ml-2" />}
                 </Button>
               </motion.form>
             ) : (

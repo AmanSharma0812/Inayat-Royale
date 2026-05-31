@@ -20,6 +20,7 @@ import AdminProducts from '@/pages/AdminProducts';
 import AdminCategories from '@/pages/AdminCategories';
 import AdminContacts from '@/pages/AdminContacts';
 import AdminChangePassword from '@/pages/AdminChangePassword';
+import AdminOrders from '@/pages/AdminOrders';
 import ShippingPolicy from '@/pages/ShippingPolicy';
 import ReturnPolicy from '@/pages/ReturnPolicy';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
@@ -79,6 +80,14 @@ function App() {
                     element={
                       <ProtectedAdminRoute>
                         <AdminContacts />
+                      </ProtectedAdminRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/admin/orders" 
+                    element={
+                      <ProtectedAdminRoute>
+                        <AdminOrders />
                       </ProtectedAdminRoute>
                     } 
                   />
