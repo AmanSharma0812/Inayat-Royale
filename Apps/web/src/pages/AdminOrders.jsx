@@ -41,9 +41,13 @@ const AdminOrders = () => {
       const parsedOrders = result.items
         .map((item, index) => {
           try {
-            console.log(`Processing item ${index}:`, item.id, item.message.substring(0, 50));
-            const payload = JSON.parse(item.message);
-            console.log(`Parsed payload ${index}:`, payload.isOrder);
+            let payload;
+            if (typeof item.message === 'string') {
+              payload = JSON.parse(item.message);
+            } else if (typeof item.message === 'object') {
+              payload = item.message;
+            }
+            
             if (payload && payload.isOrder) {
               return {
                 id: item.id,
@@ -59,7 +63,7 @@ const AdminOrders = () => {
               };
             }
           } catch (e) {
-            console.error(`Failed to parse order ${index}:`, e);
+            console.error(`Failed to parse order ${item.id}:`, e);
             // Not a JSON order, skip
           }
           return null;
