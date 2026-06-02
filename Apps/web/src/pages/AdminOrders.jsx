@@ -34,11 +34,16 @@ const AdminOrders = () => {
         requestKey: null
       });
 
+      console.log('Raw result from PocketBase:', result);
+      console.log('Total items fetched:', result.items.length);
+
       // Filter and parse orders (server already filtered, but double-check)
       const parsedOrders = result.items
-        .map(item => {
+        .map((item, index) => {
           try {
+            console.log(`Processing item ${index}:`, item.id, item.message.substring(0, 50));
             const payload = JSON.parse(item.message);
+            console.log(`Parsed payload ${index}:`, payload.isOrder);
             if (payload && payload.isOrder) {
               return {
                 id: item.id,
@@ -54,12 +59,14 @@ const AdminOrders = () => {
               };
             }
           } catch (e) {
+            console.error(`Failed to parse order ${index}:`, e);
             // Not a JSON order, skip
           }
           return null;
         })
         .filter(Boolean);
 
+      console.log('Final parsedOrders length:', parsedOrders.length);
       setOrders(parsedOrders);
       setFilteredOrders(parsedOrders);
     } catch (error) {
