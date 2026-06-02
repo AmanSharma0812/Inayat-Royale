@@ -19,19 +19,22 @@ const AdminOrders = () => {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { formatPrice } = useCurrency();
 
   const fetchOrders = async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const result = await pb.collection('contacts').getList(1, 500, {
         sort: '-created',
+        filter: 'message ~ "isOrder"',
         requestKey: null
       });
 
-      // Filter and parse orders
+      // Filter and parse orders (server already filtered, but double-check)
       const parsedOrders = result.items
         .map(item => {
           try {
@@ -42,12 +45,12 @@ const AdminOrders = () => {
                 created: item.created,
                 customerName: item.name,
                 customerPhone: item.phone,
-                address: payload.address,
-                pincode: payload.pincode,
+                address: payload.address || '',
+                pincode: payload.pincode || '',
                 items: payload.items || [],
                 total: payload.total || 0,
                 status: payload.status || 'pending',
-                originalItem: item // hold original record to modify if needed
+                originalItem: item
               };
             }
           } catch (e) {
@@ -61,7 +64,9 @@ const AdminOrders = () => {
       setFilteredOrders(parsedOrders);
     } catch (error) {
       if (!pb.isAbort(error)) {
-        toast.error('Failed to fetch order history');
+        const msg = error?.response?.message || error?.message || 'Unknown error';
+        setFetchError(msg);
+        toast.error(`Failed to fetch orders: ${msg}`);
       }
     } finally {
       setIsLoading(false);
@@ -81,11 +86,11 @@ const AdminOrders = () => {
 
     const query = searchQuery.toLowerCase();
     const filtered = orders.filter(order => 
-      order.customerName.toLowerCase().includes(query) ||
-      order.customerPhone.includes(query) ||
-      order.address.toLowerCase().includes(query) ||
-      order.pincode.includes(query) ||
-      order.items.some(item => item.name.toLowerCase().includes(query))
+      (order.customerName?.toLowerCase() || '').includes(query) ||
+      (order.customerPhone || '').includes(query) ||
+      (order.address?.toLowerCase() || '').includes(query) ||
+      (order.pincode || '').includes(query) ||
+      order.items.some(item => (item.name?.toLowerCase() || '').includes(query))
     );
     setFilteredOrders(filtered);
   }, [searchQuery, orders]);
@@ -169,16 +174,45 @@ const AdminOrders = () => {
               <p className="text-muted-foreground">Monitor client detail profiles and date-wise payment/order invoices</p>
             </div>
             
-            <div className="relative max-w-sm w-full">
-              <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
-              <Input
-                placeholder="Search name, phone, items..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-11 rounded-xl bg-card border-border"
-              />
+            <div className="flex items-center gap-3">
+              <div className="relative max-w-sm w-full">
+                <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search name, phone, items..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 h-11 rounded-xl bg-card border-border"
+                />
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={fetchOrders}
+                disabled={isLoading}
+                className="h-11 w-11 rounded-xl shrink-0"
+                title="Refresh orders"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              </Button>
             </div>
           </div>
+
+          {/* Error State */}
+          {fetchError && (
+            <div className="mb-6 p-4 rounded-xl border border-destructive/50 bg-destructive/10 flex items-start gap-3">
+              <div className="w-5 h-5 rounded-full bg-destructive flex items-center justify-center shrink-0 mt-0.5">
+                <X className="w-3 h-3 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-destructive mb-1">Failed to load orders</p>
+                <p className="text-xs text-muted-foreground">{fetchError}</p>
+                <p className="text-xs text-muted-foreground mt-1">Make sure you are logged in as admin and the PocketBase backend is accessible.</p>
+              </div>
+              <Button variant="outline" size="sm" onClick={fetchOrders} className="shrink-0 text-xs rounded-lg">
+                <RefreshCw className="w-3 h-3 mr-1" /> Retry
+              </Button>
+            </div>
+          )}
 
           {isLoading ? (
             <div className="text-center py-20">
@@ -296,9 +330,14 @@ const AdminOrders = () => {
             <div className="text-center py-20 bg-card rounded-2xl border border-dashed border-border flex flex-col items-center justify-center p-8">
               <ShoppingBag className="w-16 h-16 text-muted-foreground mb-4" />
               <h3 className="text-2xl font-serif font-bold mb-2">No orders found</h3>
-              <p className="text-muted-foreground max-w-sm">
-                {searchQuery ? "No orders match your search criteria. Try a different query." : "Customer orders and inquiries will show up here once submitted."}
+              <p className="text-muted-foreground max-w-sm mb-6">
+                {searchQuery ? "No orders match your search criteria. Try a different query." : "Customer orders will appear here once customers complete the inquiry form."}
               </p>
+              {!searchQuery && (
+                <Button variant="outline" onClick={fetchOrders} className="rounded-xl">
+                  <RefreshCw className="w-4 h-4 mr-2" /> Refresh
+                </Button>
+              )}
             </div>
           )}
         </main>

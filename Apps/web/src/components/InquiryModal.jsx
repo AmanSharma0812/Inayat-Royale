@@ -39,10 +39,13 @@ const InquiryModal = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
+    setStep(2);
+  };
 
+  const handleComplete = async () => {
     setIsSubmitting(true);
     try {
       const orderPayload = {
@@ -74,60 +77,14 @@ const InquiryModal = () => {
         status: 'new'
       }, { requestKey: null });
 
-      setStep(2);
+      toast.success('Order placed successfully! We will contact you shortly.');
+      handleClose();
     } catch (error) {
-      console.error('Failed to save order details:', error);
-      toast.error('Failed to save order details. Please try again.');
+      console.error('Failed to place order:', error);
+      toast.error('Failed to place order. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const buildWhatsAppMessage = () => {
-    const header = `🛍️ *New Order Inquiry – Inayat Royale*\n\n`;
-
-    const customer =
-      `*Customer Details:*\n` +
-      `👤 Name: ${form.name}\n` +
-      `📱 Phone: ${form.phone}\n` +
-      `📍 Address: ${form.address}\n` +
-      `📮 Pincode: ${form.pincode}\n\n`;
-
-    let items = '';
-    if (inquiryData?.type === 'product') {
-      const p = inquiryData.product;
-      const cat = inquiryData.category?.name || '';
-      const price = p.price ? formatPrice(p.price) : 'Price on request';
-      const link = `${window.location.origin}/product/${p.id}`;
-      items =
-        `*Item Ordered:*\n` +
-        `💎 ${p.name}${cat ? ` (${cat})` : ''}\n` +
-        `💰 Price: ${price}\n` +
-        `🔗 ${link}\n\n`;
-    } else if (inquiryData?.type === 'wishlist') {
-      const list = inquiryData.items
-        .map((item, i) => {
-          const price = item.price ? formatPrice(item.price * item.quantity) : 'Price on request';
-          return `${i + 1}. ${item.name} × ${item.quantity} — ${price}`;
-        })
-        .join('\n');
-      const total = inquiryData.items.reduce(
-        (sum, item) => sum + (item.price || 0) * item.quantity,
-        0
-      );
-      items =
-        `*Wishlist Items:*\n${list}\n\n` +
-        `💰 Total Estimate: ${formatPrice(total)}\n\n`;
-    }
-
-    return header + customer + items + `Please confirm this order. Thank you! 🙏`;
-  };
-
-  const handleComplete = () => {
-    const message = buildWhatsAppMessage();
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
-    toast.success('Order details sent on WhatsApp!');
-    handleClose();
   };
 
   const handleClose = () => {
@@ -310,15 +267,25 @@ const InquiryModal = () => {
                 </div>
 
                 <p className="text-xs text-muted-foreground mb-6">
-                  After paying, tap the button below to send your order details to us on WhatsApp.
+                  After paying, tap the button below to place your order.
                 </p>
 
                 <Button
                   onClick={handleComplete}
-                  className="w-full h-14 text-base rounded-2xl bg-[#25D366] hover:bg-[#20BA5A] text-white shadow-xl shadow-[#25D366]/20"
+                  disabled={isSubmitting}
+                  className="w-full h-14 text-base rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl"
                 >
-                  <MessageCircle className="w-5 h-5 mr-3" />
-                  Done! Send Order on WhatsApp
+                  {isSubmitting ? (
+                    <div className="flex items-center">
+                      <div className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-3"></div>
+                      Placing Order...
+                    </div>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 mr-3" />
+                      Place Order
+                    </>
+                  )}
                 </Button>
 
                 <button
