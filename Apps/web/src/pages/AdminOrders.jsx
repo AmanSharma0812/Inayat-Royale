@@ -29,7 +29,7 @@ const AdminOrders = () => {
     setFetchError(null);
     try {
       const result = await pb.collection('contacts').getList(1, 500, {
-        sort: '-created',
+        sort: '-id',
         filter: 'message ~ "isOrder"',
         requestKey: null
       });
@@ -51,7 +51,7 @@ const AdminOrders = () => {
             if (payload && payload.isOrder) {
               return {
                 id: item.id,
-                created: item.created,
+                created: item.created || payload.createdAt || '',
                 customerName: item.name,
                 customerPhone: item.phone,
                 address: payload.address || '',

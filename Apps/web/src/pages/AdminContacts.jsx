@@ -17,7 +17,7 @@ const AdminContacts = () => {
     setIsLoading(true);
     try {
       const result = await pb.collection('contacts').getList(1, 500, { 
-        sort: '-created',
+        sort: '-id',
         requestKey: null
       });
       const enquiriesOnly = result.items.filter(item => {

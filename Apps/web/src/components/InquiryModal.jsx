@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useInquiry } from '@/contexts/InquiryContext';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { useCart } from '@/contexts/CartContext';
 import { WHATSAPP_NUMBER } from '@/config/seo';
 import { User, Phone, MapPin, Hash, MessageCircle, CheckCircle2, ArrowRight, Package } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ const INITIAL_FORM = { name: '', phone: '', address: '', pincode: '' };
 const InquiryModal = () => {
   const { isOpen, inquiryData, closeInquiry } = useInquiry();
   const { formatPrice } = useCurrency();
+  const { clearCart } = useCart();
 
   const [step, setStep] = useState(1); // 1 = customer details form, 2 = QR code
   const [form, setForm] = useState(INITIAL_FORM);
@@ -52,6 +54,7 @@ const InquiryModal = () => {
         isOrder: true,
         address: form.address,
         pincode: form.pincode,
+        createdAt: new Date().toISOString(),
         items: inquiryData.type === 'product'
           ? [{
               id: inquiryData.product.id,
@@ -76,6 +79,10 @@ const InquiryModal = () => {
         message: JSON.stringify(orderPayload),
         status: 'new'
       }, { requestKey: null });
+
+      if (inquiryData.type === 'wishlist') {
+        clearCart();
+      }
 
       toast.success('Order placed successfully! We will contact you shortly.');
       handleClose();
